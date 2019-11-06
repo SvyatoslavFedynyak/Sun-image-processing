@@ -11,5 +11,6 @@ The detection performance is enhanced further using a combination of modified re
 # Usefull links
 Scikit-image module for image segmentation
 https://towardsdatascience.com/image-segmentation-using-pythons-scikit-image-module-533a61ecc980
+
 About FAR & FRR
 https://www.bayometric.com/false-acceptance-rate-far-false-recognition-rate-frr/
