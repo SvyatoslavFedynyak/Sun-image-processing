@@ -9,8 +9,11 @@ FAR error rate and FRR error rate  for active regions
 The detection performance is enhanced further using a combination of modified region growing and neural network (NN) technique which is trained on statistical features extracted from the RoI and non-RoI. Using this combination the FAR has dropped to 2% for active regions, and 4% for filaments.
 
 # Usefull links
-Scikit-image module for image segmentation
+Scikit-image module for image segmentation 
 https://towardsdatascience.com/image-segmentation-using-pythons-scikit-image-module-533a61ecc980
 
-About FAR & FRR
+About FAR & FRR 
 https://www.bayometric.com/false-acceptance-rate-far-false-recognition-rate-frr/
+
+AI for segmentation 
+https://missinglink.ai/guides/computer-vision/image-segmentation-deep-learning-methods-applications/
