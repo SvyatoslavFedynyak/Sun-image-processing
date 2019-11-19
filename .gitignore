@@ -1,6 +1,8 @@
 # for virtualenv
 env/
 
+.vscode
+
 # python files
 
  Byte-compiled / optimized / DLL files
