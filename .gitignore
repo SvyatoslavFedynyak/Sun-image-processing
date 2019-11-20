@@ -2,6 +2,8 @@
 env/
 
 .vscode
+data/
+PIC*
 
 # python files
 
