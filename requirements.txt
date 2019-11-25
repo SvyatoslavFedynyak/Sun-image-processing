@@ -1,0 +1,5 @@
+astropy
+matplotlib
+pillow
+tensorflow
+tensorflow-datasets
