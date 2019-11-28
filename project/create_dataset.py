@@ -2,33 +2,31 @@ import numpy as np
 import pathlib
 import os
 import tensorflow as tf
+import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
+import cv2
+import glob
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 # convert source files to dataset
 
-
 def create_dataset(datasets_dir):
     data_dir = pathlib.Path(datasets_dir)
-    image_count = len(list(data_dir.glob('*/*.jpg')))
-    CLASS_NAMES = np.array(
-        [item.name for item in data_dir.glob('*') if item.name != "LICENSE.txt"])
 
-    list_ds = tf.data.Dataset.list_files(str(data_dir/'*/*'))
+    objects = []
+    objects.append('../data/datasets/image/1.jpg|../data/datasets/mask/1.jpg')
+    objects.append('../data/datasets/image/2.jpg|../data/datasets/mask/2.jpg')
 
-    BATCH_SIZE = 2
-    IMG_HEIGHT = 224
-    IMG_WIDTH = 224
-    STEPS_PER_EPOCH = np.ceil(image_count/BATCH_SIZE)
+    images = glob.glob ('../data/datasets/image/*')
+    masks = glob.glob ('../data/datasets/mask/*')
 
+    list_ds = tf.data.Dataset.from_tensor_slices(tf.convert_to_tensor(objects))
 
-    def get_label(file_path):
-        # convert the path to a list of path components
-        parts = tf.strings.split(file_path, os.path.sep)
-        # The second to last is the class-directory
-        return parts[-2] == CLASS_NAMES
+    #<ParallelMapDataset shapes: ((128, 128, 3), (128, 128, 1)), types: (tf.float32, tf.float32)>
 
+    IMG_HEIGHT = 128
+    IMG_WIDTH = 128
 
     def decode_img(img):
         # convert the compressed string to a 3D uint8 tensor
@@ -40,40 +38,14 @@ def create_dataset(datasets_dir):
 
 
     def process_path(file_path):
-        label = get_label(file_path)
-        # load the raw data from the file as a string
-        img = tf.io.read_file(file_path)
+        parts = tf.strings.split(file_path, '|')
+        img = tf.io.read_file(parts[0])
         img = decode_img(img)
-        return img, label
+        mask = tf.io.read_file(parts[1])
+        mask = decode_img(mask)
+        return img, mask
 
 
     labeled_ds = list_ds.map(process_path, num_parallel_calls=AUTOTUNE)
-
-    for image, label in labeled_ds.take(1):
-        print("Image shape: ", image.numpy().shape)
-        print("Label: ", label.numpy())
-
-
-    def prepare_for_training(ds, cache=True, shuffle_buffer_size=1000):
-        # This is a small dataset, only load it once, and keep it in memory.
-        # use `.cache(filename)` to cache preprocessing work for datasets that don't
-        # fit in memory.
-        if cache:
-            if isinstance(cache, str):
-                ds = ds.cache(cache)
-            else:
-                ds = ds.cache()
-
-        ds = ds.shuffle(buffer_size=shuffle_buffer_size)
-
-        # Repeat forever
-        ds = ds.repeat()
-
-        ds = ds.batch(BATCH_SIZE)
-
-        # `prefetch` lets the dataset fetch batches in the background while the model
-        # is training.
-        ds = ds.prefetch(buffer_size=AUTOTUNE)
-
-        return ds
-    return prepare_for_training(labeled_ds)
+   
+    return labeled_ds

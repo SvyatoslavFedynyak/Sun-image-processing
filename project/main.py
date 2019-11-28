@@ -1,10 +1,9 @@
-#import sys
-#root_dir = '/home/svyatoslav/projects/git-proj/Sun-image-processing'
-#sys.path.insert(0, root_dir)
-
-import create_dataset
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from create_dataset import *
 
 dataset = create_dataset('../data/datasets')
+
 
 def display(display_list):
   plt.figure(figsize=(15, 15))
@@ -18,6 +17,10 @@ def display(display_list):
     plt.axis('off')
   plt.show()
 
-for image in dataset.take(1):
-  sample_image = image
-display([sample_image])
+#<ParallelMapDataset shapes: ((128, 128, 3), (128, 128, 1)), types: (tf.float32, tf.float32)>
+print(dataset)
+
+for image, mask in dataset.take(1):
+  sample_image, sample_mask = image, mask
+display([sample_image, sample_mask])
+
