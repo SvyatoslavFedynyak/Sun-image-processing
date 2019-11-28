@@ -1,9 +1,23 @@
-import tensorflow as tf
-import tensorflow_datasets as tfds
-import pathlib
+#import sys
+#root_dir = '/home/svyatoslav/projects/git-proj/Sun-image-processing'
+#sys.path.insert(0, root_dir)
 
-sodism_dataset_url = 'ftp://picardweb:ftp@ftp.latmos.ipsl.fr/2014/01/PIC-SOD-20140104_0115-535D-RS-MNM-L1B-SL4R_20140613-O1_D1_C0_R6_G1_F0_X0_P0.fits.gz'
-sodism_dataset = tf.keras.utils.get_file(origin=sodism_dataset_url,
-                                         fname='sodism_2014')
+import create_dataset
 
+dataset = create_dataset('../data/datasets')
 
+def display(display_list):
+  plt.figure(figsize=(15, 15))
+
+  title = ['Input Image']
+
+  for i in range(len(display_list)):
+    plt.subplot(1, len(display_list), i+1)
+    plt.title(title[i])
+    plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
+    plt.axis('off')
+  plt.show()
+
+for image in dataset.take(1):
+  sample_image = image
+display([sample_image])
