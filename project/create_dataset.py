@@ -1,30 +1,26 @@
+import tensorflow as tf
 import numpy as np
 import pathlib
-import os
-import tensorflow as tf
-import tensorflow_datasets as tfds
-import matplotlib.pyplot as plt
-import cv2
 import glob
-
-AUTOTUNE = tf.data.experimental.AUTOTUNE
+import os
 
 # convert source files to dataset
 
 def create_dataset(datasets_dir):
+
+    # directory with datasets
     data_dir = pathlib.Path(datasets_dir)
 
+    # take files and masks paths and combine in format of "{imade_path|mask_path}"
     objects = []
-    objects.append('../data/datasets/image/1.jpg|../data/datasets/mask/1.jpg')
-    objects.append('../data/datasets/image/2.jpg|../data/datasets/mask/2.jpg')
+    for item in glob.glob('{0}/image/*'.format(data_dir)):
+        item = os.path.basename(item)
+        objects.append('{0}/image/{1}|{0}/mask/{1}'.format(data_dir, item))
 
-    images = glob.glob ('../data/datasets/image/*')
-    masks = glob.glob ('../data/datasets/mask/*')
-
+    # creates dataset
     list_ds = tf.data.Dataset.from_tensor_slices(tf.convert_to_tensor(objects))
 
-    #<ParallelMapDataset shapes: ((128, 128, 3), (128, 128, 1)), types: (tf.float32, tf.float32)>
-
+    # normalize images
     IMG_HEIGHT = 128
     IMG_WIDTH = 128
 
@@ -36,7 +32,7 @@ def create_dataset(datasets_dir):
         # resize the image to the desired size.
         return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
 
-
+    # map func for dataset (opend image for path and add as element)
     def process_path(file_path):
         parts = tf.strings.split(file_path, '|')
         img = tf.io.read_file(parts[0])
@@ -45,7 +41,7 @@ def create_dataset(datasets_dir):
         mask = decode_img(mask)
         return img, mask
 
-
-    labeled_ds = list_ds.map(process_path, num_parallel_calls=AUTOTUNE)
+    # map dataset (invokes map func for every element)
+    labeled_ds = list_ds.map(process_path, num_parallel_calls=tf.data.experimental.AUTOTUNE)
    
     return labeled_ds
