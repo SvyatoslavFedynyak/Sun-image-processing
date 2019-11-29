@@ -1,6 +1,4 @@
 astropy
 matplotlib
-pillow
 tensorflow
-tensorflow-datasets
-scikit-image
+numpy
