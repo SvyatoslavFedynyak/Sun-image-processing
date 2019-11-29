@@ -10,18 +10,8 @@ The detection performance is enhanced further using a combination of modified re
 
 # Required directory struct
 !!! Images and mask should have same names
-.
-├── data
-│   ├── datasets
-│   │   ├── image
-│   │   └── mask
-├── project
-│   ├── create_dataset.py
-│   ├── main.py
-├── README.md
-├── requirements.txt
-└── scripts
-    └── fits-to-jpg.py
+
+![Required dir struct](https://github.com/SvyatoslavFedynyak/Sun-image-processing/blob/development/images/image.png)
 
 
 # Usefull links
