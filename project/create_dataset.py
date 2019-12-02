@@ -1,10 +1,10 @@
 import tensorflow as tf
-import numpy as np
 import pathlib
 import glob
 import os
 
 # convert source files to dataset
+
 
 def create_dataset(datasets_dir):
 

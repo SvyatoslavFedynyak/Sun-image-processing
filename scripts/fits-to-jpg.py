@@ -1,4 +1,4 @@
-import os, re
+import os
 import matplotlib.pyplot as plt
 from astropy.visualization import astropy_mpl_style
 
